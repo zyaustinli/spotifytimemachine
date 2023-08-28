@@ -12,20 +12,11 @@ response = requests.get(f"{URL}{date}")
 contents = response.text
 soup = BeautifulSoup(contents, "html.parser")
 
-top_songs = []
-no_1_song_title = soup.find(name="h3").getText()
-top_songs.append(no_1_song_title)
-
-songs = soup.find_all(name="h3", class_="c-title__link lrv-a-unstyle-link")
-for song in songs:
-    top_songs.append(song.getText())
-
-top_song_titles = []
-for song in top_songs:
-    top_song_titles.append(song.strip())
+song_names_spans = soup.select("li ul li h3")
+song_names = [song.getText().strip() for song in song_names_spans]
 
 
-print(top_song_titles)
+print(song_names)
 
 client_id = ""
 client_secret = ""
@@ -46,7 +37,7 @@ user_id = spotify.current_user()["id"]
 
 year = date.split("-")[0]
 track_uris = []
-for song in top_song_titles:
+for song in song_names:
     try:
         result = spotify.search(q=f"track:{song} year:{year}", type="track")
         track_uri = result["tracks"]['items'][0]['uri']
