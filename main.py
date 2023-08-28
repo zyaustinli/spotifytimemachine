@@ -24,7 +24,6 @@ top_song_titles = []
 for song in top_songs:
     top_song_titles.append(song.strip())
 
-#Setting up Spotify Authentication
 
 print(top_song_titles)
 
@@ -40,12 +39,11 @@ spotify = spotipy.Spotify(
         scope="playlist-modify-private",
         show_dialog=True,
         cache_path="token.txt",
-        #username = "fmuuy72rf077vwqurs7fkutne"
+        #username = ""
     )
 )
 user_id = spotify.current_user()["id"]
 
-# Get spotify track uris for the top 100 song titles that the user is asking for
 year = date.split("-")[0]
 track_uris = []
 for song in top_song_titles:
@@ -57,14 +55,12 @@ for song in top_song_titles:
     else:
         track_uris.append(track_uri)
 
-# Create a private playlist base on the date the user has inputted
 playlist = spotify.user_playlist_create(
     user=user_id,
     name=f"{date} Billboard 100",
     public=False,
 )
 
-# Add track uris to the newly created playlist
 spotify.user_playlist_add_tracks(
     user=user_id,
     playlist_id=playlist['id'],
